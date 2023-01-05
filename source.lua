@@ -1,9 +1,9 @@
-if IY_LOADED and not _G.IY_DEBUG == true then
-	-- error("Infinite Yield is already running!",0)
+if NY_LOADED and not _G.NY_DEBUG == true then
+	-- error("Nemo Yield is already running!",0)
 	return
 end
 
-pcall(function() getgenv().IY_LOADED = true end)
+pcall(function() getgenv().NY_LOADED = true end)
 
 COREGUI = game:GetService("CoreGui")
 if not game:IsLoaded() then
@@ -206,7 +206,7 @@ Title.BorderSizePixel = 0
 Title.Size = UDim2.new(0, 250, 0, 20)
 Title.Font = Enum.Font.SourceSans
 Title.TextSize = 18
-Title.Text = "Infinite Yield FE v" .. currentVersion
+Title.Text = "Nemo Yield FE v" .. currentVersion
 
 do
 	local emoji = ({
@@ -2800,10 +2800,10 @@ nosaves = false
 local loadedEventData = nil
 function saves()
 	if writefileExploit() then
-		if pcall(function() readfile("IY_FE.iy") end) then
-			if readfile("IY_FE.iy") ~= nil then
+		if pcall(function() readfile("NY_FE.iy") end) then
+			if readfile("NY_FE.iy") ~= nil then
 				local success, response = pcall(function()
-					local json = HttpService:JSONDecode(readfile("IY_FE.iy"))
+					local json = HttpService:JSONDecode(readfile("NY_FE.iy"))
 					if json.prefix ~= nil then prefix = json.prefix else prefix = ';' end
 					if json.StayOpen ~= nil then StayOpen = json.StayOpen else StayOpen = false end
 					if json.keepIY ~= nil then KeepInfYield = json.keepIY else KeepInfYield = true end
@@ -2826,19 +2826,19 @@ function saves()
 				if not success then
 					warn("Save Json Error:", response)
 					warn("Overwriting Save File")
-					writefileCooldown("IY_FE.iy", defaults)
+					writefileCooldown("NY_FE.iy", defaults)
 					wait()
 					saves()
 				end
 			else
-				writefileCooldown("IY_FE.iy", defaults)
+				writefileCooldown("NY_FE.iy", defaults)
 				wait()
 				saves()
 			end
 		else
-			writefileCooldown("IY_FE.iy", defaults)
+			writefileCooldown("NY_FE.iy", defaults)
 			wait()
-			if pcall(function() readfile("IY_FE.iy") end) then
+			if pcall(function() readfile("NY_FE.iy") end) then
 				saves()
 			else
 				nosaves = true
@@ -2969,7 +2969,7 @@ function updatesaves()
 			currentScroll = {currentScroll.R,currentScroll.G,currentScroll.B};
 			eventBinds = eventEditor.SaveData()
 		}
-		writefileCooldown("IY_FE.iy", HttpService:JSONEncode(update))
+		writefileCooldown("NY_FE.iy", HttpService:JSONEncode(update))
 	end
 end
 
@@ -3796,7 +3796,7 @@ SaveChatlogs.MouseButton1Down:Connect(function()
 		if #scroll_2:GetChildren() > 0 then
 			notify("Loading",'Hold on a sec')
 			local placeName = CleanFileName(MarketplaceService:GetProductInfo(PlaceId).Name)
-			local writelogs = '-- Infinite Yield Chat logs for "'..placeName..'"\n'
+			local writelogs = '-- Nemo Yield Chat logs for "'..placeName..'"\n'
 			for _, child in pairs(scroll_2:GetChildren()) do
 				writelogs = writelogs..'\n'..child.Text
 			end
@@ -3824,25 +3824,25 @@ task.spawn(function()
 	coroutine.resume(coroutine.create(function()
 		local ChatEvents = ReplicatedStorage:WaitForChild("DefaultChatSystemChatEvents", math.huge)
 		local OnMessageEvent = ChatEvents:WaitForChild("OnMessageDoneFiltering", math.huge)
-        if OnMessageEvent:IsA("RemoteEvent") then
-            OnMessageEvent.OnClientEvent:Connect(function(data)
-                if data ~= nil then
-                    local player = tostring(data.FromSpeaker)
-                    local message = tostring(data.Message)
-                    local originalchannel = tostring(data.OriginalChannel)
-                    if string.find(originalchannel, "To ") then
-                        message = "/w " .. string.gsub(originalchannel, "To ", "") .. " " .. message
-                    end
-                    if originalchannel == "Team" then
-                        message = "/team " .. message
-                    end
-                    eventEditor.FireEvent("OnChatted", player, message)
-                    if logsEnabled then
-                        CreateLabel(player, message)
-                    end
-                end
-            end)
-        end
+		if OnMessageEvent:IsA("RemoteEvent") then
+			OnMessageEvent.OnClientEvent:Connect(function(data)
+				if data ~= nil then
+					local player = tostring(data.FromSpeaker)
+					local message = tostring(data.Message)
+					local originalchannel = tostring(data.OriginalChannel)
+					if string.find(originalchannel, "To ") then
+						message = "/w " .. string.gsub(originalchannel, "To ", "") .. " " .. message
+					end
+					if originalchannel == "Team" then
+						message = "/team " .. message
+					end
+					eventEditor.FireEvent("OnChatted", player, message)
+					if logsEnabled then
+						CreateLabel(player, message)
+					end
+				end
+			end)
+		end
 	end))
 end)
 
@@ -4259,7 +4259,7 @@ function autoComplete(str,curText)
 end
 
 CMDs = {}
-CMDs[#CMDs + 1] = {NAME = 'discord / support / help', DESC = 'Invite to the Infinite Yield support server.'}
+CMDs[#CMDs + 1] = {NAME = 'discord / support / help', DESC = 'Invite to the Nemo Yield support server.'}
 CMDs[#CMDs + 1] = {NAME = 'console', DESC = 'Loads old Roblox console'}
 CMDs[#CMDs + 1] = {NAME = 'explorer / dex', DESC = 'Opens DEX by Moon'}
 CMDs[#CMDs + 1] = {NAME = 'olddex / odex', DESC = 'Opens Old DEX by Moon'}
@@ -4892,7 +4892,7 @@ function execCmd(cmdStr,speaker,store)
 				if infTimes then
 					while lastBreakTime < cmdStartTime do
 						local success,err = pcall(cmd.FUNC,args, speaker)
-						if not success and _G.IY_DEBUG then
+						if not success and _G.NY_DEBUG then
 							warn("Command Error:", cmdName, err)
 						end
 						wait(cmdDelay)
@@ -4903,7 +4903,7 @@ function execCmd(cmdStr,speaker,store)
 						local success,err = pcall(function()
 							cmd.FUNC(args, speaker)
 						end)
-						if not success and _G.IY_DEBUG then
+						if not success and _G.NY_DEBUG then
 							warn("Command Error:", cmdName, err)
 						end
 						if cmdDelay ~= 0 then wait(cmdDelay) end
@@ -5217,16 +5217,16 @@ SpecialPlayerCases = {
 		if v ~= nil then table.insert(plrs, v) end
 		return plrs
 	end,
-    ["npcs"] = function(speaker,args)
+	["npcs"] = function(speaker,args)
 		local returns = {}
-        for _, v in pairs(workspace:GetDescendants()) do
-            if v:IsA("Model") and getRoot(v) and v:FindFirstChildWhichIsA("Humanoid") and Players:GetPlayerFromCharacter(v) == nil then
-                local clone = Instance.new("Player")
-                clone.Name = v.Name .. " - " .. v:FindFirstChildWhichIsA("Humanoid").DisplayName
-                clone.Character = v
-                table.insert(returns, v)
-            end
-        end
+		for _, v in pairs(workspace:GetDescendants()) do
+			if v:IsA("Model") and getRoot(v) and v:FindFirstChildWhichIsA("Humanoid") and Players:GetPlayerFromCharacter(v) == nil then
+				local clone = Instance.new("Player")
+				clone.Name = v.Name .. " - " .. v:FindFirstChildWhichIsA("Humanoid").DisplayName
+				clone.Character = v
+				table.insert(returns, v)
+			end
+		end
 		return returns
 	end,
 }
@@ -6005,7 +6005,7 @@ end)
 PluginsGUI = PluginEditor.background
 
 function addPlugin(name)
-	if name:lower() == 'plugin file name' or name:lower() == 'iy_fe.iy' or name == 'iy_fe' then
+	if name:lower() == 'plugin file name' or name:lower() == 'NY_fe.iy' or name == 'NY_fe' then
 		notify('Plugin Error','Please enter a valid plugin')
 	else
 		local file
@@ -7635,8 +7635,8 @@ addcmd('noesp',{'unesp'},function(args, speaker)
 end)
 
 addcmd('esptransparency',{},function(args, speaker)
-    espTransparency = (args[1] and isNumber(args[1]) and args[1]) or 0.3
-    updatesaves()
+	espTransparency = (args[1] and isNumber(args[1]) and args[1]) or 0.3
+	updatesaves()
 end)
 
 local espParts = {}
@@ -9913,88 +9913,88 @@ addcmd('console',{},function(args, speaker)
 end)
 
 addcmd('explorer', {'dex'}, function(args, speaker)
-    notify('Loading', 'Hold on a sec')
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/peyton2465/Dex/master/out.lua"))()
+	notify('Loading', 'Hold on a sec')
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/peyton2465/Dex/master/out.lua"))()
 end)
 
 addcmd('olddex', {'odex'}, function(args, speaker)
-    notify('Loading old explorer', 'Hold on a sec')
-    
-    local getobjects = function(a)
-        local Objects = {}
-        if a then
-            local b = InsertService:LoadLocalAsset(a)
-            if b then 
-                table.insert(Objects, b) 
-            end
-        end
-        return Objects
-    end
+	notify('Loading old explorer', 'Hold on a sec')
 
-    local Dex = getobjects("rbxassetid://10055842438")[1]
-    Dex.Parent = PARENT
+	local getobjects = function(a)
+		local Objects = {}
+		if a then
+			local b = InsertService:LoadLocalAsset(a)
+			if b then 
+				table.insert(Objects, b) 
+			end
+		end
+		return Objects
+	end
 
-    local function Load(Obj, Url)
-        local function GiveOwnGlobals(Func, Script)
-            -- Fix for this edit of dex being poorly made
-            -- I (Alex) would like to commemorate whoever added this dex in somehow finding the worst dex to ever exist
-            local Fenv, RealFenv, FenvMt = {}, {
-                script = Script,
-                getupvalue = function(a, b)
-                    return nil -- force it to use globals
-                end,
-                getreg = function() -- It loops registry for some idiotic reason so stop it from doing that and just use a global
-                    return {} -- force it to use globals
-                end,
-                getprops = getprops or function(inst)
-                    if getproperties then
-                        local props = getproperties(inst)
-                        if props[1] and gethiddenproperty then
-                            local results = {}
-                            for _,name in pairs(props) do
-                                local success, res = pcall(gethiddenproperty, inst, name)
-                                if success then
-                                    results[name] = res
-                                end
-                            end
-                            
-                            return results
-                        end
-                        
-                        return props
-                    end
-                    
-                    return {}
-                end
-            }, {}
-            FenvMt.__index = function(a,b)
-                return RealFenv[b] == nil and getgenv()[b] or RealFenv[b]
-            end
-            FenvMt.__newindex = function(a, b, c)
-                if RealFenv[b] == nil then 
-                    getgenv()[b] = c 
-                else 
-                    RealFenv[b] = c 
-                end
-            end
-            setmetatable(Fenv, FenvMt)
-            pcall(setfenv, Func, Fenv)
-            return Func
-        end
+	local Dex = getobjects("rbxassetid://10055842438")[1]
+	Dex.Parent = PARENT
 
-        local function LoadScripts(_, Script)
-            if Script:IsA("LocalScript") then
-                coroutine.wrap(function()
-                    GiveOwnGlobals(loadstring(Script.Source,"="..Script:GetFullName()), Script)()
-                end)()
-            end
-            table.foreach(Script:GetChildren(), LoadScripts)
-        end
-                    
-        LoadScripts(nil, Obj)
-    end
+	local function Load(Obj, Url)
+		local function GiveOwnGlobals(Func, Script)
+			-- Fix for this edit of dex being poorly made
+			-- I (Alex) would like to commemorate whoever added this dex in somehow finding the worst dex to ever exist
+			local Fenv, RealFenv, FenvMt = {}, {
+				script = Script,
+				getupvalue = function(a, b)
+					return nil -- force it to use globals
+				end,
+				getreg = function() -- It loops registry for some idiotic reason so stop it from doing that and just use a global
+					return {} -- force it to use globals
+				end,
+				getprops = getprops or function(inst)
+					if getproperties then
+						local props = getproperties(inst)
+						if props[1] and gethiddenproperty then
+							local results = {}
+							for _,name in pairs(props) do
+								local success, res = pcall(gethiddenproperty, inst, name)
+								if success then
+									results[name] = res
+								end
+							end
 
-    Load(Dex)
+							return results
+						end
+
+						return props
+					end
+
+					return {}
+				end
+			}, {}
+			FenvMt.__index = function(a,b)
+				return RealFenv[b] == nil and getgenv()[b] or RealFenv[b]
+			end
+			FenvMt.__newindex = function(a, b, c)
+				if RealFenv[b] == nil then 
+					getgenv()[b] = c 
+				else 
+					RealFenv[b] = c 
+				end
+			end
+			setmetatable(Fenv, FenvMt)
+			pcall(setfenv, Func, Fenv)
+			return Func
+		end
+
+		local function LoadScripts(_, Script)
+			if Script:IsA("LocalScript") then
+				coroutine.wrap(function()
+					GiveOwnGlobals(loadstring(Script.Source,"="..Script:GetFullName()), Script)()
+				end)()
+			end
+			table.foreach(Script:GetChildren(), LoadScripts)
+		end
+
+		LoadScripts(nil, Obj)
+	end
+
+	Load(Dex)
 end)
 
 addcmd('remotespy',{'rspy'},function(args, speaker)
@@ -12105,15 +12105,15 @@ IYMouse.Move:Connect(checkTT)
 
 task.spawn(function()
 	local success, latestVersionInfo = pcall(function() 
-		local versionJson = game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/version')
+		local versionJson = game:HttpGet('https://raw.githubusercontent.com/GrumpyNemo/NemoYield/main/version')
 		return HttpService:JSONDecode(versionJson)
 	end)
-	
+
 	if success then
 		if currentVersion ~= latestVersionInfo.Version then
-			notify('Outdated','Get the new version at infyiff.github.io')
+			notify('Outdated','Get the new version at __________')
 		end
-		
+
 		if latestVersionInfo.Announcement and latestVersionInfo.Announcement ~= '' then
 			local AnnGUI = Instance.new("Frame")
 			local background = Instance.new("Frame")
