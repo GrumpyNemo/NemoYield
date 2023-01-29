@@ -2800,10 +2800,10 @@ nosaves = false
 local loadedEventData = nil
 function saves()
 	if writefileExploit() then
-		if pcall(function() readfile("NY_FE.iy") end) then
-			if readfile("NY_FE.iy") ~= nil then
+		if pcall(function() readfile("IY_FE.iy") end) then
+			if readfile("IY_FE.iy") ~= nil then
 				local success, response = pcall(function()
-					local json = HttpService:JSONDecode(readfile("NY_FE.iy"))
+					local json = HttpService:JSONDecode(readfile("IY_FE.iy"))
 					if json.prefix ~= nil then prefix = json.prefix else prefix = ';' end
 					if json.StayOpen ~= nil then StayOpen = json.StayOpen else StayOpen = false end
 					if json.keepIY ~= nil then KeepInfYield = json.keepIY else KeepInfYield = true end
@@ -2826,19 +2826,19 @@ function saves()
 				if not success then
 					warn("Save Json Error:", response)
 					warn("Overwriting Save File")
-					writefileCooldown("NY_FE.iy", defaults)
+					writefileCooldown("IY_FE.iy", defaults)
 					wait()
 					saves()
 				end
 			else
-				writefileCooldown("NY_FE.iy", defaults)
+				writefileCooldown("IY_FE.iy", defaults)
 				wait()
 				saves()
 			end
 		else
-			writefileCooldown("NY_FE.iy", defaults)
+			writefileCooldown("IY_FE.iy", defaults)
 			wait()
-			if pcall(function() readfile("NY_FE.iy") end) then
+			if pcall(function() readfile("IY_FE.iy") end) then
 				saves()
 			else
 				nosaves = true
@@ -2969,7 +2969,7 @@ function updatesaves()
 			currentScroll = {currentScroll.R,currentScroll.G,currentScroll.B};
 			eventBinds = eventEditor.SaveData()
 		}
-		writefileCooldown("NY_FE.iy", HttpService:JSONEncode(update))
+		writefileCooldown("IY_FE.iy", HttpService:JSONEncode(update))
 	end
 end
 
@@ -6005,7 +6005,7 @@ end)
 PluginsGUI = PluginEditor.background
 
 function addPlugin(name)
-	if name:lower() == 'plugin file name' or name:lower() == 'NY_fe.iy' or name == 'NY_fe' then
+	if name:lower() == 'plugin file name' or name:lower() == 'IY_FE.iy' or name == 'IY_FE' then
 		notify('Plugin Error','Please enter a valid plugin')
 	else
 		local file
