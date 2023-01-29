@@ -1,4 +1,4 @@
-if NY_LOADED and not _G.NY_DEBUG == true then
+if NY_LOADED or IY_LOADED and not _G.NY_DEBUG == true then
 	-- error("Nemo Yield is already running!",0)
 	return
 end
